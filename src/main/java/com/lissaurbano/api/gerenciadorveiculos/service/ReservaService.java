@@ -38,17 +38,20 @@ public class ReservaService {
 
     public Reserva salvarReserva(Reserva reserva, int idCliente, int idVeiculo){
 
-        Cliente cliente = clienteService.getClienteByCodigo(idCliente);
-        Veiculo veiculo = veiculoService.getVeiculoByCodigo(idVeiculo);
+        if (reserva.isNotDomingo() && reserva.validacaoDatas()) {
 
-        reserva.setDataInicio(reserva.getDataInicio());     
-        reserva.setDataFim(reserva.getDataFim());
-        
-        reserva.setCliente(cliente);
-        reserva.setVeiculo(veiculo);
-        cliente.addReserva(reserva);
-        veiculo.addReserva(reserva);
+            Cliente cliente = clienteService.getClienteByCodigo(idCliente);
+            Veiculo veiculo = veiculoService.getVeiculoByCodigo(idVeiculo);
+
+            reserva.setDataInicio(reserva.getDataInicio());     
+            reserva.setDataFim(reserva.getDataFim());
+            
+            reserva.setCliente(cliente);
+            reserva.setVeiculo(veiculo);
+            cliente.addReserva(reserva);
+            veiculo.addReserva(reserva);
 
         return reservaRepository.salvar(reserva);
+        } else { throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data inválida!"); }
     }
 }

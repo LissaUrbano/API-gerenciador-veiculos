@@ -1,9 +1,11 @@
 package com.lissaurbano.api.gerenciadorveiculos.model;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class Reserva {
@@ -69,6 +71,17 @@ public class Reserva {
         this.dataFim = dataFim;
     }
 
+    @JsonIgnore
+    public boolean validacaoDatas() {
+        return (getDataInicio().isAfter(LocalDateTime.now()) && getDataFim().isAfter(getDataInicio()));
+    }
+
+    @JsonIgnore
+    public boolean isNotDomingo() {
+        DayOfWeek initialDay = getDataInicio().getDayOfWeek();
+        DayOfWeek finalDay = getDataFim().getDayOfWeek();
+        return !(initialDay == DayOfWeek.SUNDAY || finalDay == DayOfWeek.SUNDAY);
+    }
 
     @Override
     public String toString() {
